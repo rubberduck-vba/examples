@@ -1,0 +1,28 @@
+﻿Option Explicit
+
+Public Sub DoSomething()
+    
+    Dim model As UserAuthModel
+    Set model = New UserAuthModel
+    
+    Dim dialog As IDialogView
+    Set dialog = AuthDialogView.Create(model)
+    
+    Dim algo As IHashAlgorithm
+    Set algo = SHA256Managed.Create()
+    
+    Dim service As IAuthService
+    Set service = WorksheetAuthService.Create(algo)
+    
+    Dim presenter As IAuthPresenter
+    Set presenter = AuthPresenter.Create(service, dialog)
+    
+    If presenter.Authenticate Then
+        If presenter.IsAuthenticated Then
+            MsgBox "Welcome!", vbInformation
+        Else
+            MsgBox "Access denied", vbExclamation
+        End If
+    End If
+    
+End Sub
