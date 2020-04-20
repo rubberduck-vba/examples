@@ -40,15 +40,18 @@ Friend Sub Connect(ByVal connString As String)
 End Sub
 
 Private Sub AdoConnection_BeginTransComplete(ByVal TransactionLevel As Long, ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
-    Debug.Print "Begin transaction completed. " & pError.Description
+    Debug.Print "Begin transaction completed. "
+    If Not pError Is Nothing Then Debug.Print "Error: " & pError.Number, pError.Description
 End Sub
 
 Private Sub AdoConnection_CommitTransComplete(ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
-    Debug.Print "Commit transaction completed. " & pError.Description
+    Debug.Print "Commit transaction completed. "
+    If Not pError Is Nothing Then Debug.Print "Error: " & pError.Number, pError.Description
 End Sub
 
 Private Sub AdoConnection_ConnectComplete(ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
-    Debug.Print "Connect completed. Status: " & adStatus & " - Message: " & pError.Description
+    Debug.Print "Connect completed. Status: " & adStatus
+    If Not pError Is Nothing Then Debug.Print "Error: " & pError.Number, pError.Description
 End Sub
 
 Private Sub AdoConnection_Disconnect(adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
@@ -57,7 +60,7 @@ End Sub
 
 Private Sub AdoConnection_ExecuteComplete(ByVal RecordsAffected As Long, ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pCommand As ADODB.Command, ByVal pRecordset As ADODB.Recordset, ByVal pConnection As ADODB.Connection)
     Debug.Print "Execute completed, " & RecordsAffected & " record(s) affected."
-    If pError.Number <> 0 Then Debug.Print "Error: " & pError.Number, pError.Description
+    If Not pError Is Nothing Then Debug.Print "Error: " & pError.Number, pError.Description
 End Sub
 
 Private Sub AdoConnection_InfoMessage(ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)

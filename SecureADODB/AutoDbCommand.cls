@@ -21,11 +21,10 @@ End Type
 Private this As TCommand
 
 '@Inject: just an idea.. see #https://github.com/rubberduck-vba/Rubberduck/issues/5463
-Public Function Create(ByVal connString As String, ByVal factory As IDbConnectionFactory, ByVal provider As IParameterProvider, ByVal baseCommand As IDbCommandBase) As IDbCommand
+Public Function Create(ByVal connString As String, ByVal factory As IDbConnectionFactory, ByVal baseCommand As IDbCommandBase) As IDbCommand
     Errors.GuardNonDefaultInstance Me, AutoDbCommand
     Errors.GuardEmptyString connString
     Errors.GuardNullReference factory
-    Errors.GuardNullReference provider
     Errors.GuardNullReference baseCommand
     
     Dim result As AutoDbCommand

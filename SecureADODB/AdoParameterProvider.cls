@@ -60,7 +60,7 @@ Private Function IParameterProvider_FromValue(ByVal value As Variant, Optional B
         result.value = value
     End If
     
-    If IsCharMapping(result.Type) Then result.Size = Len(value)
+    If IsCharMapping(result.Type) And Len(value) > 0 Then result.Size = Len(value)
     If name <> vbNullString Then result.name = name
     
     Set IParameterProvider_FromValue = result

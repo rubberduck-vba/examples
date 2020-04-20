@@ -31,13 +31,12 @@ Private Sub ModuleCleanup()
     Set Assert = Nothing
 End Sub
 
-Private Function GetSUT(Optional ByRef stubBase As StubDbCommandBase, Optional ByRef stubFactory As StubDbConnectionFactory, Optional ByRef stubProvider As StubParameterProvider) As IDbCommand
+Private Function GetSUT(Optional ByRef stubBase As StubDbCommandBase, Optional ByRef stubFactory As StubDbConnectionFactory) As IDbCommand
     Set stubFactory = New StubDbConnectionFactory
     Set stubBase = New StubDbCommandBase
-    Set stubProvider = New StubParameterProvider
     
     Dim result As AutoDbCommand
-    Set result = AutoDbCommand.Create("connection string", stubFactory, stubProvider, stubBase)
+    Set result = AutoDbCommand.Create("connection string", stubFactory, stubBase)
     
     Set GetSUT = result
 End Function
@@ -74,7 +73,7 @@ Private Sub Create_ThrowsIfNotInvokedFromDefaultInstance()
     With New AutoDbCommand
         On Error GoTo CleanFail
         Dim sut As IDbCommand
-        Set sut = .Create("connection string", New StubDbConnectionFactory, New StubParameterProvider, New StubDbCommandBase)
+        Set sut = .Create("connection string", New StubDbConnectionFactory, New StubDbCommandBase)
         On Error GoTo 0
     End With
     
@@ -89,7 +88,7 @@ Private Sub Create_ThrowsGivenEmptyConnectionString()
     
     On Error GoTo CleanFail
     Dim sut As IDbCommand
-    Set sut = AutoDbCommand.Create(vbNullString, New StubDbConnectionFactory, New StubParameterProvider, New StubDbCommandBase)
+    Set sut = AutoDbCommand.Create(vbNullString, New StubDbConnectionFactory, New StubDbCommandBase)
     On Error GoTo 0
     
 CleanFail:
@@ -103,21 +102,7 @@ Private Sub Create_ThrowsGivenNullConnectionFactory()
     
     On Error GoTo CleanFail
     Dim sut As IDbCommand
-    Set sut = AutoDbCommand.Create("connection string", Nothing, New StubParameterProvider, New StubDbCommandBase)
-    On Error GoTo 0
-    
-CleanFail:
-    If Err.Number = ExpectedError Then Exit Sub
-TestFail:
-    Assert.Fail "Expected error was not raised."
-End Sub
-
-'@TestMethod("Factory Guard")
-Private Sub Create_ThrowsGivenNullParameterProvider()
-    
-    On Error GoTo CleanFail
-    Dim sut As IDbCommand
-    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, Nothing, New StubDbCommandBase)
+    Set sut = AutoDbCommand.Create("connection string", Nothing, New StubDbCommandBase)
     On Error GoTo 0
     
 CleanFail:
@@ -131,7 +116,7 @@ Private Sub Create_ThrowsGivenNullCommandBase()
     
     On Error GoTo CleanFail
     Dim sut As IDbCommand
-    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, New StubParameterProvider, Nothing)
+    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, Nothing)
     On Error GoTo 0
     
 CleanFail:
@@ -145,7 +130,7 @@ Private Sub ConnectionFactory_ThrowsIfAlreadySet()
     On Error GoTo TestFail
     
     Dim sut As AutoDbCommand
-    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, New StubParameterProvider, New StubDbCommandBase)
+    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, New StubDbCommandBase)
     
     On Error GoTo CleanFail
     Set sut.ConnectionFactory = New StubDbConnectionFactory
@@ -162,7 +147,7 @@ Private Sub Base_ThrowsIfAlreadySet()
     On Error GoTo TestFail
     
     Dim sut As AutoDbCommand
-    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, New StubParameterProvider, New StubDbCommandBase)
+    Set sut = AutoDbCommand.Create("connection string", New StubDbConnectionFactory, New StubDbCommandBase)
     
     On Error GoTo CleanFail
     Set sut.Base = New StubDbCommandBase
@@ -180,10 +165,9 @@ Private Sub Execute_ThrowsGivenExtraneousArgument()
     
     Dim stubBase As StubDbCommandBase
     Dim stubFactory As StubDbConnectionFactory
-    Dim stubProvider As StubParameterProvider
     
     Dim sut As IDbCommand
-    Set sut = GetSUT(stubBase, stubFactory, stubProvider)
+    Set sut = GetSUT(stubBase, stubFactory)
     
     On Error GoTo CleanFail
     Dim result As ADODB.Recordset
