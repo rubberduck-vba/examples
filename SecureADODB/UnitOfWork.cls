@@ -8,8 +8,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "An object that encapsulates a database transaction."
-'@Folder("SecureADODB.API")
-'@ModuleDescription("Top-level API object, encapsulates a database transaction.")
+'@Folder("SecureADODB.UnitOfWork")
+'@ModuleDescription("An object that encapsulates a database transaction.")
 '@PredeclaredId
 '@Exposed
 Option Explicit
@@ -84,7 +84,7 @@ End Sub
 Private Sub IUnitOfWork_Commit()
     Errors.GuardExpression this.Committed, message:="Transaction is already committed."
     Errors.GuardExpression this.RolledBack, message:="Transaction was rolled back."
-    On Error Resume Next
+    On Error Resume Next ' not all providers support transactions
     this.Connection.CommitTransaction
     this.Committed = True
     On Error GoTo 0
@@ -96,7 +96,7 @@ End Function
 
 Private Sub IUnitOfWork_Rollback()
     Errors.GuardExpression this.Committed, message:="Transaction is already committed."
-    On Error Resume Next
+    On Error Resume Next ' not all providers support transactions
     this.Connection.RollbackTransaction
     this.RolledBack = True
     On Error GoTo 0

@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "An object intended to be used as a private instance field in a class implementing the IDbCommand interface (composition in place of inheritance)."
+'@Exposed
 '@Folder("SecureADODB.DbCommand.Abstract")
 '@ModuleDescription("An object intended to be used as a private instance field in a class implementing the IDbCommand interface (composition in place of inheritance).")
 '@PredeclaredId
@@ -98,12 +99,7 @@ Private Function GetSingleValue(ByVal db As IDbConnection, ByVal sql As String, 
     Errors.GuardEmptyString sql
     
     Dim cmd As ADODB.Command
-    Set cmd = db.CreateCommand(adCmdText, sql)
-    
-    Dim arg As ADODB.Parameter
-    For Each arg In this.ParameterProvider.FromValues(args)
-        cmd.parameters.Append arg
-    Next
+    Set cmd = CreateCommand(db, adCmdText, sql, args)
     
     Dim results As ADODB.Recordset
     Set results = GetDisconnectedRecordset(cmd)

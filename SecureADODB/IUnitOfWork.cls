@@ -8,8 +8,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Description = "Represents an object encapsulating a database transaction."
-'@Folder("SecureADODB.API")
-'@ModuleDescription("Represents a top-level API object encapsulating a database transaction.")
+'@Folder("SecureADODB.UnitOfWork")
+'@ModuleDescription("Represents an object encapsulating a database transaction.")
 '@Interface
 '@Exposed
 Option Explicit
@@ -25,7 +25,7 @@ Attribute Rollback.VB_Description = "Rolls back the transaction."
 End Sub
 
 '@Description("Creates a new command to execute as part of the transaction.")
+'@Ignore ShadowedDeclaration: false positive here,
 Public Function Command() As IDbCommand
 Attribute Command.VB_Description = "Creates a new command to execute as part of the transaction."
 End Function
-

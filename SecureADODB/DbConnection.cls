@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "A thin wrapper around an ADODB connection."
+'@Exposed
 '@Folder("SecureADODB.DbConnection")
 '@ModuleDescription("A thin wrapper around an ADODB connection.")
 '@PredeclaredId
@@ -73,7 +74,7 @@ End Sub
 
 Private Sub AdoConnection_RollbackTransComplete(ByVal pError As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
     Debug.Print "Rollback transaction completed."
-    If pError.Number <> 0 Then Debug.Print "Error: " & pError.Number, pError.Description
+    If Not pError Is Nothing Then Debug.Print "Error: " & pError.Number, pError.Description
 End Sub
 
 Private Sub AdoConnection_WillConnect(ConnectionString As String, UserID As String, Password As String, Options As Long, adStatus As ADODB.EventStatusEnum, ByVal pConnection As ADODB.Connection)
@@ -100,13 +101,17 @@ Private Property Get IDbConnection_AdoConnection() As ADODB.Connection
 End Property
 
 Private Sub IDbConnection_BeginTransaction()
+    On Error Resume Next 'not all providers support transactions
     Dim result As Long
     result = AdoConnection.BeginTrans
-    HasActiveTransaction = CBool(result)
+    On Error GoTo 0
+    HasActiveTransaction = True
 End Sub
 
 Private Sub IDbConnection_CommitTransaction()
+    On Error Resume Next
     AdoConnection.CommitTrans
+    On Error GoTo 0
     HasActiveTransaction = False
 End Sub
 

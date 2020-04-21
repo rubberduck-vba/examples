@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "An object responsible for mapping programmatic data types to ADODB.DataTypeEnum values."
+'@Exposed
 '@Folder("SecureADODB.ParameterProvider")
 '@ModuleDescription("An object responsible for mapping programmatic data types to ADODB.DataTypeEnum values.")
 '@PredeclaredId
@@ -77,5 +78,3 @@ End Property
 Private Property Let ITypeMap_Mapping(ByVal name As String, ByVal value As ADODB.DataTypeEnum)
     Me.Mapping(name) = value
 End Property
-
-

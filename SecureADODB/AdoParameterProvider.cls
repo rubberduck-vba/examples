@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "An object responsible for converting a value of a mapped data type to an ADODB.Parameter object."
+'@Exposed
 '@Folder("SecureADODB.ParameterProvider")
 '@ModuleDescription("An object responsible for converting a value of a mapped data type to an ADODB.Parameter object.")
 '@PredeclaredId
@@ -43,6 +44,11 @@ Attribute TypeMappings.VB_Description = "Gets/sets the type mappings for this in
 End Property
 
 Private Function IParameterProvider_FromValue(ByVal value As Variant, Optional ByVal name As String, Optional ByVal dataTypeName As String) As ADODB.Parameter
+    If TypeOf value Is ADODB.Parameter Then
+        Set IParameterProvider_FromValue = value
+        Exit Function
+    End If
+
     Dim localDataTypeName As String
     localDataTypeName = dataTypeName
     If localDataTypeName = vbNullString Then localDataTypeName = TypeName(value)
