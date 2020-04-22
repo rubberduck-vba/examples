@@ -1,4 +1,4 @@
-Accompanying code for (upcoming article)
+Accompanying code for https://rubberduckvba.wordpress.com/2020/04/22/secure-adodb/
 
 ---
 
