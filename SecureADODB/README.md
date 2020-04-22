@@ -48,12 +48,14 @@ End With 'transaction is rolled back if not committed, connection is closed.
 
 When working with an `IUnitOfWork`, best practices would be:
 
- - **DO** have the object reference held by a `With` block.
+ - **DO** hold the object reference in a `With` block. (e.g. `With New UnitOfWork.FromConnectionString(...)`)
  - **DO** have an `On Error` statement before the `With` block, to handle any errors.
+ - **DO** commit or rollback the transaction explicitly in the scope that owns the `IUnitOfWork` object.
  - **AVOID** passing `IUnitOfWork` as a parameter to another procedure.
- - **NEVER** jump back into a `With` block after handling errors.
 
-If an error occurs and execution jumps out of the `With` block (and the `With` block is holding the `IUnitOfWork` reference), then the transaction is already rolled back and the connection is already closed when the error handler gets to run.
+The scope that creates the `IUnitOfWork` is responsible for knowing what to do with the transaction: we absolutely will be calling other code, but that other code very likely only needs the `IDbCommand` interface, not the whole transaction.
+
+A unit of work can only be committed or rolled back (one of) *once*: keep that responsibility in the scope that owns the `IUnitOfWork`.
 
 ### DbConnection
 
