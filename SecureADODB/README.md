@@ -49,11 +49,12 @@ End With 'transaction is rolled back if not committed, connection is closed.
 When working with an `IUnitOfWork`, best practices would be:
 
  - **DO** hold the object reference in a `With` block. (e.g. `With New UnitOfWork.FromConnectionString(...)`)
- - **DO** have an `On Error` statement before the `With` block, to handle any errors.
+ - **DO** have an active `On Error` statement to graciously handle any errors.
  - **DO** commit or rollback the transaction explicitly in the scope that owns the `IUnitOfWork` object.
- - **AVOID** passing `IUnitOfWork` as a parameter to another procedure.
+ - **AVOID** passing `IUnitOfWork` as a parameter to another object or procedure.
+ - **AVOID** accidentally re-entering a `With` block from an error-handling subroutine (i.e. avoid `Resume` or `Resume Next`). If there was an error, execution jumped out of the `With` block that held the references, and the transaction is rolled back and the connection is closed. There's nothing left to clean up.
 
-The scope that creates the `IUnitOfWork` is responsible for knowing what to do with the transaction: we absolutely will be calling other code, but that other code very likely only needs the `IDbCommand` interface, not the whole transaction.
+The scope that creates the `IUnitOfWork` is responsible for knowing what to do with the transaction it encapsulates: we absolutely will be calling other code, but that other code very likely only needs the `IDbCommand` interface, not the whole transaction.
 
 A unit of work can only be committed or rolled back (one of) *once*: keep that responsibility in the scope that owns the `IUnitOfWork`.
 
@@ -66,18 +67,19 @@ With DbConnection.Create(connString)
     'connection is open (no transaction is initiated, but invoking .BeginTransaction would do that)
     
     Dim conn As ADODB.Connection
-    Set conn = .AdoConnection '<~ if we want we can access the wrapped connection directly from here
+    Set conn = .AdoConnection '<~ if we want we can access the wrapped connection directly from here, but we don't need to.
+    
     
     '...
     
 End With 'connection is closed.
 ```
 
-When working with an `IDbConnection`, best practices would be (..the same as `IUnitOfWork`):
- - **DO** have the object reference held by a `With` block.
- - **DO** have an `On Error` statement before the `With` block, to handle any errors.
- - **AVOID** passing `IDbConnection` as a parameter to another procedure.
- - **NEVER** jump back into a `With` block after handling errors.
+When working with an `IDbConnection`, best practices would be:
+ - **DO** hold the object reference in a `With` block. (e.g. `With DbConnection.Create(...)`)
+ - **DO** have an active `On Error` statement to graciously handle any errors.
+ - **CONSIDER** passing the `IDbConnection` object to `UnitOfWork.Create`.
+ - **CONSIDER** passing the `IDbConnection` object to `DefaultDbCommand.Create`.
 
 If an error occurs and execution jumps out of the `With` block (and the `With` block is holding the `IDbConnection` reference), then the connection is already closed when the error handler gets to run.
 
