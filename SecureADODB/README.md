@@ -80,6 +80,7 @@ When working with an `IDbConnection`, best practices would be:
  - **DO** have an active `On Error` statement to graciously handle any errors.
  - **CONSIDER** passing the `IDbConnection` object to `UnitOfWork.Create`.
  - **CONSIDER** passing the `IDbConnection` object to `DefaultDbCommand.Create`.
+ - **AVOID** passing `IDbConnection` as a parameter to another object or procedure.
 
 If an error occurs and execution jumps out of the `With` block (and the `With` block is holding the `IDbConnection` reference), then the connection is already closed when the error handler gets to run.
 
