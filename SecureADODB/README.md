@@ -143,7 +143,7 @@ Set baseCommand = DbCommandBase.Create(provider)
 With DbConnection.Create(connString)
     
     Dim cmd As IDbCommand
-    Set cmd = DefaultDbCommand.Create(db, baseCommand)
+    Set cmd = DefaultDbCommand.Create(.Self, baseCommand)
 
     Dim results As ADODB.Recordset
     'simply use '?' ordinal parameters in the command string, and then provide a value for each '?' in the SQL:
