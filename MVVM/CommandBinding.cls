@@ -147,11 +147,11 @@ Private Property Get ICommandBinding_Command() As ICommand
     Set ICommandBinding_Command = this.Command
 End Property
 
-Private Sub ICommandBinding_EvaluateCanExecute
+Private Sub ICommandBinding_EvaluateCanExecute()
     EvaluateCanExecute
 End Sub
 
-Private Sub EvaluateCanExecute
+Private Sub EvaluateCanExecute()
     If this.Target Is Nothing Then Exit Sub
     If this.Command Is Nothing Then
         this.Target.Enabled = False
