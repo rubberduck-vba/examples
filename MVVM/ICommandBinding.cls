@@ -25,6 +25,6 @@ Attribute Command.VB_Description = "Gets the command bound to the event source."
 End Property
 
 '@Description "Evaluates whether the command can execute given the binding context."
-Public Sub EvaluateCanExecute(ByVal Context As Object)
+Public Sub EvaluateCanExecute()
 Attribute EvaluateCanExecute.VB_Description = "Evaluates whether the command can execute given the binding context."
 End Sub

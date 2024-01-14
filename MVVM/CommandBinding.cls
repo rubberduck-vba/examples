@@ -147,16 +147,16 @@ Private Property Get ICommandBinding_Command() As ICommand
     Set ICommandBinding_Command = this.Command
 End Property
 
-Private Sub ICommandBinding_EvaluateCanExecute(ByVal Context As Object)
-    EvaluateCanExecute Context
+Private Sub ICommandBinding_EvaluateCanExecute()
+    EvaluateCanExecute
 End Sub
 
-Private Sub EvaluateCanExecute(ByVal Source As Object)
+Private Sub EvaluateCanExecute()
     If this.Target Is Nothing Then Exit Sub
     If this.Command Is Nothing Then
         this.Target.Enabled = False
     Else
-        this.Target.Enabled = this.Command.CanExecute(Source)
+        this.Target.Enabled = this.Command.CanExecute(this.ViewModel)
     End If
 End Sub
 
